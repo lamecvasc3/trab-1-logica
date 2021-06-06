@@ -1,3 +1,6 @@
+from typing import Counter
+
+
 auxiliary_symbols = '(', ')'
 unary_connective =  '-'
 binary_connective =  '&', '#', '>'
@@ -45,8 +48,9 @@ def check_formula(formula):
 
     for a in range(len(formula)):
         #Verifica se o caractere é uma letra
-        if (formula[a].isalpha()):
+        if (formula[a].isalpha()): 
             if(formula[a+1].isalpha() or check_unary_connective(formula[a+1]) or (formula[a+1] == '(')):
+                print('Erro 1')
                 return False
             continue
         elif (check_auxiliary_symbols(formula[a])):
@@ -69,7 +73,7 @@ def check_formula(formula):
                 return False
         elif(check_binary_connective(formula[a])):
             #Verifica se o caractere é um conectivo binário
-            if check_binary_connective(formula[a+1]) or formula[a+1] == '(':
+            if check_binary_connective(formula[a+1]) or formula[a+1] == ')':
                 print('erro 5')
                 return False
             continue
@@ -79,50 +83,53 @@ def check_formula(formula):
     return True
           
 def divide_formulas (formula):
-    controller = 0
     first_half = ''
     second_half = ''
-    for caractere in formula:
-        if caractere == '>':
-            controller = 1
-            continue
-        if(controller == 0):
-            first_half += caractere
-        else:
-            second_half += caractere
+    for a in formula:
+        if check_binary_connective(a):
+            formula = formula.split(a, 1)
+            if(len(formula[0]) <= 3):
+                formula[0] = formula[0].replace('(', '')
+            if(len(formula[1]) <= 3 ):
+                formula[1] = formula[1].replace(')', '')
+            first_half = formula[0]
+            second_half = formula[1]
 
-    return first_half, second_half
+            return first_half, second_half
+ 
+def is_atomic(formula):
+    if (len(formula) == 1 and formula.isalpha()) or (len(formula) == 2 and check_unary_connective(formula[0]) and formula[1].isalpha()):
+        return True
+    pass
 
 def list_subformulas(formula, subformulas):
-    subformulas.append(formula)
     first_half = ''
     second_half = ''
+    subformulas.append(formula)
+
+    if len(formula) == 1:
+        return subformulas
+
     first_half, second_half = divide_formulas(formula)
+
     subformulas.append(first_half)
     subformulas.append(second_half)
-    return subformulas
-
-
-    '''
-    subformulas = []
-    subformulas.append(formula)
-    controller = 0
-    first = ''
-    second = ''
-    for a in formula:
-        if a == '>':
-            controller = 1
-            continue
-        if controller == 0:
-            first += a
-        if controller == 1:
-            second += a
-
-    subformulas.append(first)
-    subformulas.append(second)
-    print(subformulas)
-    '''
     
+    if(is_atomic(first_half)):
+        print('E atomico')
+    else:
+        print('nao e atomico')
+
+    if(is_atomic(second_half)):
+        print('e atomic')
+    else:
+        print('nao e atomic')
+
+
+    return subformulas
+    
+
+ 
 def complexity_formula(formula):
     print('Chegamos em complexity')
     pass
@@ -137,8 +144,7 @@ def main():
         else:
             print('Não é fórmula')
     elif(option == 2):
-        retorno = check_formula(formula)
-        if(retorno):
+        if(check_formula(formula)):
             subformulas = []
             subformulas = list_subformulas(formula, subformulas)
             print(subformulas)
