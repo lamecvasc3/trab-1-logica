@@ -1,5 +1,3 @@
-from typing import Counter
-
 
 auxiliary_symbols = '(', ')'
 unary_connective =  '-'
@@ -88,10 +86,16 @@ def divide_formulas (formula):
     for a in formula:
         if check_binary_connective(a):
             formula = formula.split(a, 1)
-            if(len(formula[0]) <= 3):
+            count1 = formula[0].count('&') + formula[0].count('>') + formula[0].count('#')
+            count2 = formula[1].count('&') + formula[1].count('>') + formula[1].count('#')
+            if count1 == 0:
                 formula[0] = formula[0].replace('(', '')
-            if(len(formula[1]) <= 3 ):
+                formula[0] = formula[0].replace(')', '')
+            
+            if count2 == 0:
                 formula[1] = formula[1].replace(')', '')
+                formula[1] = formula[1].replace('(', '')
+
             first_half = formula[0]
             second_half = formula[1]
 
@@ -100,39 +104,50 @@ def divide_formulas (formula):
 def is_atomic(formula):
     if (len(formula) == 1 and formula.isalpha()) or (len(formula) == 2 and check_unary_connective(formula[0]) and formula[1].isalpha()):
         return True
-    pass
+    return False
 
 def list_subformulas(formula, subformulas):
     first_half = ''
     second_half = ''
+    if(check_unary_connective(formula[0])):
+            subformulas.append(formula)
+            formula = formula.replace('-', '', 1)
+
     subformulas.append(formula)
 
-    if len(formula) == 1:
+    if (len(formula) == 1):
         return subformulas
 
+    if (len(formula) == 2 and check_unary_connective(formula[0]) and formula[1].isalpha()):
+        subformulas.append(formula[1])
+        return subformulas
+    
     first_half, second_half = divide_formulas(formula)
 
     subformulas.append(first_half)
     subformulas.append(second_half)
     
     if(is_atomic(first_half)):
-        print('E atomico')
+        if(check_unary_connective(first_half[0])):
+            subformulas.append(first_half[1])
     else:
-        print('nao e atomico')
+        list_subformulas(first_half, subformulas)
 
     if(is_atomic(second_half)):
-        print('e atomic')
+        if(check_unary_connective(second_half[0])):
+            subformulas.append(second_half[1])
     else:
-        print('nao e atomic')
-
+        list_subformulas(second_half, subformulas)
 
     return subformulas
-    
-
- 
+     
 def complexity_formula(formula):
-    print('Chegamos em complexity')
-    pass
+    complexity = 0
+    for a in formula:
+        for b in a:
+            if(check_unary_connective(b) or check_binary_connective(b)):
+                complexity += 1
+    return complexity
 
 def main():
     formula = input('Insira a fórmula proposicional desejada: ')
@@ -147,11 +162,15 @@ def main():
         if(check_formula(formula)):
             subformulas = []
             subformulas = list_subformulas(formula, subformulas)
-            print(subformulas)
+            print(set(subformulas))
         else:
             print('Não é fórmula')
     elif(option == 3):
-        complexity_formula()
+        if(check_formula(formula)):
+            subformulas = []
+            subformulas = list_subformulas(formula, subformulas)
+            complexity = complexity_formula(set(subformulas))
+            print('Complexidade: ', complexity)
     else:
         print('Dígito não reconhecido.')
 
