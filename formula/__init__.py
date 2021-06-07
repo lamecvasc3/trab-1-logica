@@ -1,26 +1,4 @@
-
-auxiliary_symbols = '(', ')'
-unary_connective =  '-'
-binary_connective =  '&', '#', '>'
-
-
-def check_auxiliary_symbols(a):
-    for auxiliary in auxiliary_symbols:
-        if(a == auxiliary):
-            return True
-    return False
-
-def check_unary_connective(a):
-    for unary in unary_connective:
-        if (a==unary):
-            return True
-    return False
-     
-def check_binary_connective(a):
-    for binary in binary_connective:
-        if (a==binary):
-            return True
-    return False
+from check import check_auxiliary_symbols, check_binary_connective, check_unary_connective
 
 def check_formula(formula):
     counter_letter = 0
@@ -140,7 +118,7 @@ def list_subformulas(formula, subformulas):
         list_subformulas(second_half, subformulas)
 
     return subformulas
-     
+
 def complexity_formula(formula):
     complexity = 0
     for a in formula:
@@ -148,30 +126,3 @@ def complexity_formula(formula):
             if(check_unary_connective(b) or check_binary_connective(b)):
                 complexity += 1
     return complexity
-
-def main():
-    formula = input('Insira a fórmula proposicional desejada: ')
-    option = int(input('Digite o número da opção desejada: \n 1- Verificador de fórmula proposicional \n 2- Listar todas as subfórmulas \n 3- Calcular a complexidade \n'))
-
-    if(option == 1):
-        if(check_formula(formula)):
-            print('É fórmula')
-        else:
-            print('Não é fórmula')
-    elif(option == 2):
-        if(check_formula(formula)):
-            subformulas = []
-            subformulas = list_subformulas(formula, subformulas)
-            print(set(subformulas))
-        else:
-            print('Não é fórmula')
-    elif(option == 3):
-        if(check_formula(formula)):
-            subformulas = []
-            subformulas = list_subformulas(formula, subformulas)
-            complexity = complexity_formula(set(subformulas))
-            print('Complexidade: ', complexity)
-    else:
-        print('Dígito não reconhecido.')
-
-main()
