@@ -13,12 +13,11 @@ entrada é uma fórmula válida);
 - Um programa que informe a complexidade de uma fórmula dada como
 entrada (você também pode verificar a validade da entrada);
 
-
 Para fins de padronização, adote para este trabalho, as seguintes convenções:
 
 Nosso alfabeto proposicional é composto de:
 
--  Símbolos proposicional (ou atômicos) = {a, b, c, . . . , x, y, z};
+- Símbolos proposicional (ou atômicos) = {a, b, c, . . . , x, y, z};
 - Conectivo unário: − (Negação);
 - Conectivos Binários: & (conjunção), # (disjunção) e > (implicação).
 - Símbolos auxiliares: ) e ( - parênteses.
