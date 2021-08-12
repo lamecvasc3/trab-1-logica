@@ -1,5 +1,4 @@
 from formula import check_formula, list_subformulas, complexity_formula
-     
 
 if __name__ == '__main__':
     formula = input('Insira a fórmula proposicional desejada: ')
